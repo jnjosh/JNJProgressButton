@@ -26,6 +26,7 @@
 
 @interface JNJProgressButton ()
 
+@property (nonatomic, assign, readwrite) JNJProgressButtonState state;
 @property (nonatomic, strong) NSMutableDictionary *imageStateStore;
 
 @end
@@ -54,64 +55,54 @@
 
 - (void)commonInit
 {
+    self.state = JNJProgressButtonStateUnstarted;
     self.imageStateStore = [NSMutableDictionary dictionary];
+    [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
 }
 
 #pragma mark - Progress
-
-- (void)beginProgressing
-{
-    // TODO(JNJ): Implement
-}
 
 - (void)setProgress:(float)progress animated:(BOOL)animated
 {
     self.progress = progress;
 }
 
+#pragma mark - Action
+
+- (void)progressButtonWasTapped:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (self.state == JNJProgressButtonStateUnstarted && [self.delegate respondsToSelector:@selector(progressButtonStartButtonTapped:)]) {
+        self.state = JNJProgressButtonStateProgressing;
+        [self.delegate progressButtonStartButtonTapped:self];
+    } else if (self.state == JNJProgressButtonStateProgressing && [self.delegate respondsToSelector:@selector(progressButtonDidCancelProgress:)]) {
+        self.state = JNJProgressButtonStateUnstarted;
+        [self cancelProgress];
+        [self.delegate progressButtonDidCancelProgress:self];
+    } else if (self.state == JNJProgressButtonStateFinished && [self.delegate respondsToSelector:@selector(progressButtonEndButtonTapped:)]) {
+        [self.delegate progressButtonEndButtonTapped:self];
+    }
+}
+
 #pragma mark - Button Images
 
 - (void)setButtonImage:(UIImage *)image
       highlightedImage:(UIImage *)highlightImage
-             forStatus:(JNJProgressButtonStatus)status
+              forState:(JNJProgressButtonState)state
 {
     NSParameterAssert(image);
     
-    [self.imageStateStore setObject:image forKey:[self keyForState:UIControlStateNormal status:status]];
+    [self.imageStateStore setObject:image forKey:@(state)];
     
     if (highlightImage) {
-        [self.imageStateStore setObject:highlightImage forKey:[self keyForState:UIControlStateHighlighted status:status]];
+        [self.imageStateStore setObject:highlightImage forKey:@(state)];
     }
-}
-
-- (NSString *)keyForState:(UIControlState)state status:(JNJProgressButtonStatus)status
-{
-    return [NSString stringWithFormat:@"%@-%@", @(state), @(status)];
 }
 
 #pragma mark - Actions
 
-- (void)progressButtonWasTapped:(id)sender
+- (void)cancelProgress
 {
-    if (self.tapAction) {
-        self.tapAction(self);
-    }
-}
-
-#pragma mark - Properties
-
-- (void)setTapAction:(JNJProgressButtonTapAction)tapAction
-{
-    [self willChangeValueForKey:NSStringFromSelector(@selector(tapAction))];
-    _tapAction = [tapAction copy];
-    [self didChangeValueForKey:NSStringFromSelector(@selector(tapAction))];
-    
-    SEL progressButtonSelector = @selector(progressButtonWasTapped:);
-    if (_tapAction) {
-        [self addTarget:self action:progressButtonSelector forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        [self removeTarget:self action:progressButtonSelector forControlEvents:UIControlEventTouchUpInside];
-    }
+    // TODO(JNJ): Implement
 }
 
 @end

@@ -26,26 +26,30 @@
 
 @class JNJProgressButton;
 
-typedef void(^JNJProgressButtonTapAction)(JNJProgressButton *button);
+@protocol JNJProgressButtonDelegate <NSObject>
 
-typedef NS_ENUM(NSUInteger, JNJProgressButtonStatus) {
-    JNJProgressButtonStatusUnstarted,
-    JNJProgressButtonStatusProgressing,
-    JNJProgressButtonStatusFinished
+- (void)progressButtonStartButtonTapped:(JNJProgressButton *)button;
+- (void)progressButtonEndButtonTapped:(JNJProgressButton *)button;
+- (void)progressButtonDidCancelProgress:(JNJProgressButton *)button;
+
+@optional
+- (void)progressButtonDidBeginProgressing:(JNJProgressButton *)button;
+- (void)progressButtonDidEndProgressing:(JNJProgressButton *)button;
+
+@end
+
+typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
+    JNJProgressButtonStateUnstarted,
+    JNJProgressButtonStateProgressing,
+    JNJProgressButtonStateFinished
 };
 
-@interface JNJProgressButton : UIControl
+@interface JNJProgressButton : UIView
 
-// TODO(JNJ): Better name than status, and state is taken by UIControl
-@property (nonatomic, assign, readonly) JNJProgressButtonStatus status;
-
+@property (nonatomic, weak) id<JNJProgressButtonDelegate> delegate;
+@property (nonatomic, assign, readonly) JNJProgressButtonState state;
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) float progress;
-
-@property (nonatomic, copy) JNJProgressButtonTapAction tapAction;
-
-/** Notifies the control that it is about to recieve product updates. This provides the ability to go into a temporary loading state before the progress updates begin */
-- (void)beginProgressing;
 
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.
@@ -57,10 +61,10 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonStatus) {
 /** Set the button image
  @param image Image to display in the button for the specified status
  @param highlightImage Image to display in the button for the specified status and is highlighted
- @param status Status identifies when to use the above images. JNJProgressButtonStatusProgressing is ignored as it is generated.
+ @param state State identifies when to use the above images. JNJProgressButtonStateProgressing is ignored as it is generated.
  */
 - (void)setButtonImage:(UIImage *)image
       highlightedImage:(UIImage *)highlightImage
-             forStatus:(JNJProgressButtonStatus)status;
+             forState:(JNJProgressButtonState)state;
 
 @end

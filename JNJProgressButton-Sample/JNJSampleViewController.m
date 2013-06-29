@@ -26,7 +26,7 @@
 #import "JNJSampleViewController.h"
 #import "JNJProgressButton.h"
 
-@interface JNJSampleViewController ()
+@interface JNJSampleViewController () <JNJProgressButtonDelegate>
 
 @property (nonatomic, weak) IBOutlet JNJProgressButton *progressButton;
 
@@ -40,15 +40,25 @@
 {
     [super viewDidLoad];
     
-    [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"] highlightedImage:nil forStatus:JNJProgressButtonStatusUnstarted];
-    [self.progressButton addTarget:self action:@selector(progressButtonWasTapped:) forControlEvents:UIControlEventTouchUpInside];
+    self.progressButton.delegate = self;
+    [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"] highlightedImage:nil forState:JNJProgressButtonStateUnstarted];
 }
 
-#pragma mark - Actions
+#pragma mark - JNJProgressButtonDelegate
 
-- (void)progressButtonWasTapped:(JNJProgressButton *)button
+- (void)progressButtonStartButtonTapped:(JNJProgressButton *)button
 {
-    NSLog(@"tapped button");
+    NSLog(@"Start Button was tapped");
+}
+
+- (void)progressButtonEndButtonTapped:(JNJProgressButton *)button
+{
+    NSLog(@"End Button was tapped");
+}
+
+- (void)progressButtonDidCancelProgress:(JNJProgressButton *)button
+{
+    NSLog(@"Button was canceled");
 }
 
 @end
