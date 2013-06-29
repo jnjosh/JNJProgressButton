@@ -23,11 +23,17 @@
  */
 
 #import "JNJProgressButton.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface JNJProgressButton ()
 
 @property (nonatomic, assign, readwrite) JNJProgressButtonState state;
 @property (nonatomic, strong) NSMutableDictionary *imageStateStore;
+
+@property (nonatomic, strong) UIImageView *startButtonImageView;
+@property (nonatomic, strong) UIImageView *endButtonImageView;
+
+@property (nonatomic, strong) CALayer *progressButtonLayer;
 
 @end
 
@@ -58,6 +64,32 @@
     self.state = JNJProgressButtonStateUnstarted;
     self.imageStateStore = [NSMutableDictionary dictionary];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
+    
+    self.startButtonImageView = [UIImageView new];
+    [self addSubview:self.startButtonImageView];    
+}
+
+#pragma mark - Layout
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+    
+    self.startButtonImageView.image = [self.imageStateStore objectForKey:@(self.state)];
+    self.startButtonImageView.frame = (CGRect) { CGPointZero, self.startButtonImageView.image.size };
+    self.startButtonImageView.center = (CGPoint) { CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) };
+}
+
+#pragma mark - Accessibility
+
+- (BOOL)isAccessibilityElement
+{
+    return YES;
+}
+
+- (UIAccessibilityTraits)accessibilityTraits
+{
+    return [super accessibilityTraits] | UIAccessibilityTraitButton;
 }
 
 #pragma mark - Progress
@@ -72,6 +104,9 @@
 - (void)progressButtonWasTapped:(UIGestureRecognizer *)gestureRecognizer
 {
     if (self.state == JNJProgressButtonStateUnstarted && [self.delegate respondsToSelector:@selector(progressButtonStartButtonTapped:)]) {
+        [UIView animateWithDuration:0.2 animations:^{
+            self.startButtonImageView.alpha = 0.0;
+        }];
         self.state = JNJProgressButtonStateProgressing;
         [self.delegate progressButtonStartButtonTapped:self];
     } else if (self.state == JNJProgressButtonStateProgressing && [self.delegate respondsToSelector:@selector(progressButtonDidCancelProgress:)]) {
@@ -102,7 +137,10 @@
 
 - (void)cancelProgress
 {
-    // TODO(JNJ): Implement
+    [UIView animateWithDuration:0.2 animations:^{
+        self.startButtonImageView.alpha = 1.0;
+    }];
+
 }
 
 @end

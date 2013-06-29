@@ -22,7 +22,6 @@
  SOFTWARE.
  */
 
-
 #import "JNJSampleViewController.h"
 #import "JNJProgressButton.h"
 
@@ -41,7 +40,9 @@
     [super viewDidLoad];
     
     self.progressButton.delegate = self;
-    [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"] highlightedImage:nil forState:JNJProgressButtonStateUnstarted];
+    [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"]
+                       highlightedImage:nil
+                               forState:JNJProgressButtonStateUnstarted];
 }
 
 #pragma mark - JNJProgressButtonDelegate
