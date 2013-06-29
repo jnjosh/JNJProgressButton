@@ -12,6 +12,8 @@
 		A436A257177EA279003F5185 /* JNJApplicationWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = A436A256177EA279003F5185 /* JNJApplicationWindow.xib */; };
 		A436A25A177EA523003F5185 /* JNJProgressButton.m in Sources */ = {isa = PBXBuildFile; fileRef = A436A259177EA523003F5185 /* JNJProgressButton.m */; };
 		A436A25E177EB21B003F5185 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A436A25D177EB21B003F5185 /* QuartzCore.framework */; };
+		A436A261177EBAFA003F5185 /* 56-cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = A436A25F177EBAFA003F5185 /* 56-cloud.png */; };
+		A436A262177EBAFA003F5185 /* 56-cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A436A260177EBAFA003F5185 /* 56-cloud@2x.png */; };
 		A464A216177E9DB600BCE741 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A464A215177E9DB600BCE741 /* UIKit.framework */; };
 		A464A218177E9DB600BCE741 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A464A217177E9DB600BCE741 /* Foundation.framework */; };
 		A464A21A177E9DB600BCE741 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A464A219177E9DB600BCE741 /* CoreGraphics.framework */; };
@@ -31,6 +33,8 @@
 		A436A258177EA523003F5185 /* JNJProgressButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JNJProgressButton.h; sourceTree = "<group>"; };
 		A436A259177EA523003F5185 /* JNJProgressButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JNJProgressButton.m; sourceTree = "<group>"; };
 		A436A25D177EB21B003F5185 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		A436A25F177EBAFA003F5185 /* 56-cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "56-cloud.png"; sourceTree = "<group>"; };
+		A436A260177EBAFA003F5185 /* 56-cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "56-cloud@2x.png"; sourceTree = "<group>"; };
 		A464A212177E9DB600BCE741 /* JNJProgressButton-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JNJProgressButton-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A464A215177E9DB600BCE741 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A464A217177E9DB600BCE741 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -82,6 +86,15 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
+		A436A263177EBAFF003F5185 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A436A25F177EBAFA003F5185 /* 56-cloud.png */,
+				A436A260177EBAFA003F5185 /* 56-cloud@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 		A464A209177E9DB600BCE741 = {
 			isa = PBXGroup;
 			children = (
@@ -114,6 +127,7 @@
 		A464A21B177E9DB600BCE741 /* JNJProgressButton-Sample */ = {
 			isa = PBXGroup;
 			children = (
+				A436A263177EBAFF003F5185 /* Resources */,
 				A436A25B177EA5CA003F5185 /* Application */,
 				A436A25C177EA5EC003F5185 /* ViewControllers */,
 			);
@@ -201,6 +215,8 @@
 				A464A22C177E9DB600BCE741 /* Default-568h@2x.png in Resources */,
 				A436A226177EA1EE003F5185 /* JNJSampleViewController.xib in Resources */,
 				A436A257177EA279003F5185 /* JNJApplicationWindow.xib in Resources */,
+				A436A261177EBAFA003F5185 /* 56-cloud.png in Resources */,
+				A436A262177EBAFA003F5185 /* 56-cloud@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

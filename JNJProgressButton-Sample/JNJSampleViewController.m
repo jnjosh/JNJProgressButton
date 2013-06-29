@@ -40,6 +40,7 @@
 {
     [super viewDidLoad];
     
+    [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"] highlightedImage:nil forStatus:JNJProgressButtonStatusUnstarted];
     [self.progressButton addTarget:self action:@selector(progressButtonWasTapped:) forControlEvents:UIControlEventTouchUpInside];
 }
 
