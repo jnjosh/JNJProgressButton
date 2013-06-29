@@ -12,6 +12,10 @@ As part of the [Objective-C Hackathon](https://objectivechackathon.appspot.com) 
 // TODO
 ```
 
+## Credits
+
+- Icons in sample are from the [Glyphish Icon Library](http://www.glyphish.com)
+
 ## Contact
 
 - [Josh Johnson](http://jnjosh.com) [@jnjosh](http://twitter.com/jnjosh)
