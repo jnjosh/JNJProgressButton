@@ -40,6 +40,7 @@
     [super viewDidLoad];
     
     self.progressButton.delegate = self;
+    self.progressButton.tintColor = [UIColor blueColor];
     [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"]
                        highlightedImage:nil
                                forState:JNJProgressButtonStateUnstarted];

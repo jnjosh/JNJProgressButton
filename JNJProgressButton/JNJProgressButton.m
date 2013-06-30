@@ -25,6 +25,8 @@
 #import "JNJProgressButton.h"
 #import <QuartzCore/QuartzCore.h>
 
+static CGFloat const kJNJProgressCircleSize = 20.0f;
+
 @interface JNJProgressButton ()
 
 @property (nonatomic, assign, readwrite) JNJProgressButtonState state;
@@ -69,8 +71,6 @@
     [self addSubview:self.startButtonImageView];
     self.endButtonImageView = [UIImageView new];
     [self addSubview:self.endButtonImageView];
-    
-    
 }
 
 #pragma mark - Layout
@@ -159,24 +159,7 @@
         self.startButtonImageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
     }];
     
-    self.progressButtonLayer = [CAShapeLayer new];
-    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:(CGRect) { CGPointZero, self.startButtonImageView.image.size.height, self.startButtonImageView.image.size.height }];
-    self.progressButtonLayer.path = path.CGPath;
-    self.progressButtonLayer.fillColor = [UIColor clearColor].CGColor;
-    
-    UIColor *strokeColor = self.tintColor ?: [UIColor blackColor];
-    self.progressButtonLayer.strokeColor = strokeColor.CGColor;
-    self.progressButtonLayer.lineWidth = 1.0f;
-    self.progressButtonLayer.strokeEnd = 0.9;
-    self.progressButtonLayer.position = self.startButtonImageView.frame.origin;
-    [self.layer addSublayer:self.progressButtonLayer];
-    
-    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
-    rotationAnimation.fromValue = [NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)];
-    rotationAnimation.toValue = [NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation((360 * M_PI)/180)];
-    rotationAnimation.repeatCount = CGFLOAT_MAX;
-    rotationAnimation.duration = 0.3f;
-    [self.progressButtonLayer addAnimation:rotationAnimation forKey:@"rotate"];
+    [self startPreprogress];
 }
 
 - (void)cancelProgress
@@ -189,6 +172,45 @@
         self.startButtonImageView.alpha = 1.0f;
         self.startButtonImageView.transform = CGAffineTransformIdentity;
     }];
+}
+
+- (void)startPreprogress
+{
+    self.progressButtonLayer = [CAShapeLayer new];
+    
+    CGRect circleRect = (CGRect) {
+        CGRectGetMidX(self.bounds) - kJNJProgressCircleSize / 2.0f,
+        CGRectGetMidY(self.bounds) - kJNJProgressCircleSize / 2.0f,
+        kJNJProgressCircleSize,
+        kJNJProgressCircleSize
+    };
+    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:circleRect];
+    self.progressButtonLayer.path = path.CGPath;
+    self.progressButtonLayer.fillColor = [UIColor clearColor].CGColor;
+    
+    UIColor *strokeColor = self.tintColor ?: [UIColor blackColor];
+    self.progressButtonLayer.strokeColor = strokeColor.CGColor;
+    self.progressButtonLayer.lineWidth = 1.0f;
+    self.progressButtonLayer.strokeEnd = 0.9;
+    self.progressButtonLayer.position = self.startButtonImageView.frame.origin;
+    self.progressButtonLayer.shouldRasterize = YES;
+    self.progressButtonLayer.rasterizationScale = [[UIScreen mainScreen] scale];
+    self.progressButtonLayer.anchorPoint = (CGPoint) { 0.5f, 0.5f };
+    self.progressButtonLayer.frame = self.bounds;
+    [self.layer addSublayer:self.progressButtonLayer];
+    
+    CABasicAnimation *growAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    growAnimation.fromValue = @0.2f;
+    growAnimation.duration = 0.2f;
+    growAnimation.removedOnCompletion = YES;
+    [self.progressButtonLayer addAnimation:growAnimation forKey:@"scale"];
+    
+    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
+    rotationAnimation.fromValue = @0.0f;
+    rotationAnimation.toValue = @(M_PI * 2);
+    rotationAnimation.repeatCount = CGFLOAT_MAX;
+    rotationAnimation.duration = 0.5f;
+    [self.progressButtonLayer addAnimation:rotationAnimation forKey:@"rotate"];
 }
 
 #pragma mark - Helpers
