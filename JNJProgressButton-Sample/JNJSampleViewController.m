@@ -54,6 +54,19 @@
 - (void)progressButtonStartButtonTapped:(JNJProgressButton *)button
 {
     NSLog(@"Start Button was tapped");
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        [NSThread sleepForTimeInterval:3];
+        NSInteger index = 0;
+        while (index <= 100) {
+            [NSThread sleepForTimeInterval:0.125];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.progressButton.progress = (index / 100.0f);
+            });
+            index++;
+        }
+    });
+    
 }
 
 - (void)progressButtonEndButtonTapped:(JNJProgressButton *)button

@@ -25,7 +25,8 @@
 #import "JNJProgressButton.h"
 #import <QuartzCore/QuartzCore.h>
 
-static CGFloat const kJNJProgressCircleSize = 20.0f;
+static CGFloat const kJNJProgressCircleDiameter = 20.0f;
+static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 @interface JNJProgressButton ()
 
@@ -36,6 +37,7 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
 @property (nonatomic, strong) UIImageView *endButtonImageView;
 
 @property (nonatomic, strong) CAShapeLayer *progressButtonLayer;
+@property (nonatomic, strong) CAShapeLayer *progressTrackLayer;
 
 @end
 
@@ -83,6 +85,27 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
     return _tintColor;
 }
 
+- (void)setProgress:(float)progress
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(progress))];
+    _progress = progress;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(progress))];
+    
+    [self updateButtonForProgress:_progress];
+}
+
+- (CAShapeLayer *)progressTrackLayer
+{
+    if (!_progressTrackLayer) {
+        CGRect trackRect = CGRectInset([self rectForProgressCircle], 1.0f, 1.0f);
+        _progressTrackLayer = [self circleLayerWithRect:trackRect
+                                            strokeColor:self.tintColor
+                                            shadowColor:nil];
+        _progressTrackLayer.lineWidth = 3.0f;
+    }
+    return _progressTrackLayer;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews
@@ -110,7 +133,25 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
 
 - (void)setProgress:(float)progress animated:(BOOL)animated
 {
+    // TODO(JNJ): Implement Animated (or non-animated)
     self.progress = progress;
+}
+
+- (void)updateButtonForProgress:(float)progress
+{
+    if (0.0f < progress && progress <= 1.0f) {
+        if (!self.progressTrackLayer.superlayer) {
+            [self.layer addSublayer:self.progressTrackLayer];
+        }
+        self.progressButtonLayer.strokeEnd = 1.0f;
+        [self.progressButtonLayer removeAllAnimations];
+
+        self.progressTrackLayer.strokeEnd = progress;
+
+        if (progress == 1.0f) {
+            [self startFinishedState];
+        }
+   }
 }
 
 #pragma mark - Action
@@ -201,6 +242,7 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
                                              strokeColor:strokeColor
                                              shadowColor:glowColor];
     self.progressButtonLayer.frame = self.bounds;
+    self.progressButtonLayer.strokeEnd = 0.9;
     [self.layer addSublayer:self.progressButtonLayer];
 
     CAAnimationGroup *growAnimationGroup = [CAAnimationGroup animation];
@@ -224,15 +266,21 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
     [self.progressButtonLayer addAnimation:rotationAnimation forKey:@"rotate"];
 }
 
+- (void)startFinishedState
+{
+    // TODO(JNJ): Implement
+    NSLog(@"end");
+}
+
 #pragma mark - Helpers
 
 - (CGRect)rectForProgressCircle
 {
     return (CGRect) {
-        CGRectGetMidX(self.bounds) - kJNJProgressCircleSize / 2.0f,
-        CGRectGetMidY(self.bounds) - kJNJProgressCircleSize / 2.0f,
-        kJNJProgressCircleSize,
-        kJNJProgressCircleSize
+        CGRectGetMidX(self.bounds) - kJNJProgressCircleDiameter / 2.0f,
+        CGRectGetMidY(self.bounds) - kJNJProgressCircleDiameter / 2.0f,
+        kJNJProgressCircleDiameter,
+        kJNJProgressCircleDiameter
     };
 }
 
@@ -247,12 +295,15 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
     circleLayer.fillColor = [UIColor clearColor].CGColor;
     circleLayer.strokeColor = strokeColor.CGColor;
     circleLayer.lineWidth = 1.0f;
-    circleLayer.strokeEnd = 0.9;
-    circleLayer.shadowPath = path.CGPath;
-    circleLayer.shadowColor = shadowColor.CGColor;
-    circleLayer.shadowOpacity = 0.1f;
-    circleLayer.shadowRadius = kJNJProgressCircleSize / 2.0f;
-    circleLayer.shadowOffset = CGSizeZero;
+    
+    if (shadowColor) {
+        circleLayer.shadowPath = path.CGPath;
+        circleLayer.shadowColor = shadowColor.CGColor;
+        circleLayer.shadowOpacity = 0.1f;
+        circleLayer.shadowRadius = kJNJProgressCircleDiameter / 2.0f;
+        circleLayer.shadowOffset = CGSizeZero;
+    }
+    
     circleLayer.shouldRasterize = YES;
     circleLayer.rasterizationScale = [[UIScreen mainScreen] scale];
     circleLayer.anchorPoint = (CGPoint) { 0.5f, 0.5f };
