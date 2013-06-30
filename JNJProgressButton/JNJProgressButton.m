@@ -73,6 +73,16 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
     [self addSubview:self.endButtonImageView];
 }
 
+#pragma mark - Properties
+
+- (UIColor *)tintColor
+{
+    if (!_tintColor) {
+        _tintColor = [UIColor blackColor];
+    }
+    return _tintColor;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews
@@ -176,44 +186,86 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
 
 - (void)startPreprogress
 {
-    self.progressButtonLayer = [CAShapeLayer new];
+    UIColor *strokeColor = self.tintColor;
+    UIColor *glowColor = [self glowColorForTintColor];
+    CGRect circleRect = [self rectForProgressCircle];
     
-    CGRect circleRect = (CGRect) {
-        CGRectGetMidX(self.bounds) - kJNJProgressCircleSize / 2.0f,
-        CGRectGetMidY(self.bounds) - kJNJProgressCircleSize / 2.0f,
-        kJNJProgressCircleSize,
-        kJNJProgressCircleSize
-    };
-    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:circleRect];
-    self.progressButtonLayer.path = path.CGPath;
-    self.progressButtonLayer.fillColor = [UIColor clearColor].CGColor;
-    
-    UIColor *strokeColor = self.tintColor ?: [UIColor blackColor];
-    self.progressButtonLayer.strokeColor = strokeColor.CGColor;
-    self.progressButtonLayer.lineWidth = 1.0f;
-    self.progressButtonLayer.strokeEnd = 0.9;
-    self.progressButtonLayer.position = self.startButtonImageView.frame.origin;
-    self.progressButtonLayer.shouldRasterize = YES;
-    self.progressButtonLayer.rasterizationScale = [[UIScreen mainScreen] scale];
-    self.progressButtonLayer.anchorPoint = (CGPoint) { 0.5f, 0.5f };
+    self.progressButtonLayer = [self circleLayerWithRect:circleRect
+                                             strokeColor:strokeColor
+                                             shadowColor:glowColor];
     self.progressButtonLayer.frame = self.bounds;
     [self.layer addSublayer:self.progressButtonLayer];
     
-    CABasicAnimation *growAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-    growAnimation.fromValue = @0.2f;
-    growAnimation.duration = 0.2f;
-    growAnimation.removedOnCompletion = YES;
-    [self.progressButtonLayer addAnimation:growAnimation forKey:@"scale"];
+    CAAnimationGroup *growAnimationGroup = [CAAnimationGroup animation];
+    {
+        CABasicAnimation *growAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        growAnimation.fromValue = @0.0f;
+        CABasicAnimation *fadeAnimation = [CABasicAnimation animationWithKeyPath:@"fillColor"];
+        fadeAnimation.fromValue = (__bridge id)(glowColor.CGColor);
+        growAnimationGroup.animations = @[ growAnimation, fadeAnimation ];
+    }
+    growAnimationGroup.duration = 0.25f;
+    growAnimationGroup.removedOnCompletion = YES;
+    [self.progressButtonLayer addAnimation:growAnimationGroup forKey:@"scale"];
     
     CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.fromValue = @0.0f;
     rotationAnimation.toValue = @(M_PI * 2);
     rotationAnimation.repeatCount = CGFLOAT_MAX;
-    rotationAnimation.duration = 0.5f;
+    rotationAnimation.duration = 1.0f;
     [self.progressButtonLayer addAnimation:rotationAnimation forKey:@"rotate"];
 }
 
 #pragma mark - Helpers
+
+- (CGRect)rectForProgressCircle
+{
+    return (CGRect) {
+        CGRectGetMidX(self.bounds) - kJNJProgressCircleSize / 2.0f,
+        CGRectGetMidY(self.bounds) - kJNJProgressCircleSize / 2.0f,
+        kJNJProgressCircleSize,
+        kJNJProgressCircleSize
+    };
+}
+
+- (CAShapeLayer *)circleLayerWithRect:(CGRect)circleRect
+                          strokeColor:(UIColor *)strokeColor
+                          shadowColor:(UIColor *)shadowColor
+{
+    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:circleRect];
+    CAShapeLayer *circleLayer = [CAShapeLayer new];
+    circleLayer.masksToBounds = NO;
+    circleLayer.path = path.CGPath;
+    circleLayer.fillColor = [UIColor clearColor].CGColor;
+    circleLayer.strokeColor = strokeColor.CGColor;
+    circleLayer.lineWidth = 1.0f;
+    circleLayer.strokeEnd = 0.9;
+    circleLayer.shadowPath = path.CGPath;
+    circleLayer.shadowColor = shadowColor.CGColor;
+    circleLayer.shadowOpacity = 0.2f;
+    circleLayer.shadowRadius = kJNJProgressCircleSize / 2.0f;
+    circleLayer.shadowOffset = CGSizeZero;
+    circleLayer.shouldRasterize = YES;
+    circleLayer.rasterizationScale = [[UIScreen mainScreen] scale];
+    circleLayer.anchorPoint = (CGPoint) { 0.5f, 0.5f };
+    return circleLayer;
+}
+
+- (UIColor *)glowColorForTintColor
+{
+    UIColor *glowColor = nil;
+    UIColor *tintColor = self.tintColor;
+
+    CGFloat hue, saturation, brightness, alpha;
+    if ([tintColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {
+        glowColor = [UIColor colorWithHue:hue
+                               saturation:saturation * 0.8f
+                               brightness:brightness
+                                    alpha:0.5f];
+    }
+    
+    return glowColor;
+}
 
 - (void)setImageViewAlphaIfNeeded:(CGFloat)alpha
 {
