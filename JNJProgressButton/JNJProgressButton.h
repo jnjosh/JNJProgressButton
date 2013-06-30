@@ -32,10 +32,6 @@
 - (void)progressButtonEndButtonTapped:(JNJProgressButton *)button;
 - (void)progressButtonDidCancelProgress:(JNJProgressButton *)button;
 
-@optional
-- (void)progressButtonDidBeginProgressing:(JNJProgressButton *)button;
-- (void)progressButtonDidEndProgressing:(JNJProgressButton *)button;
-
 @end
 
 typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
@@ -48,6 +44,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 
 @property (nonatomic, weak) id<JNJProgressButtonDelegate> delegate;
 @property (nonatomic, assign, readonly) JNJProgressButtonState state;
+
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) float progress;
 
