@@ -142,9 +142,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     if (self.state != JNJProgressButtonStateProgressing) return;
     
     if (0.0f < progress && progress <= 1.0f) {
-        if (!self.progressTrackLayer.superlayer) {
-            [self.layer addSublayer:self.progressTrackLayer];
-        }
+        [self addTrackIfNeeded];
         self.progressButtonLayer.strokeEnd = 1.0f;
         [self.progressButtonLayer removeAllAnimations];
 
@@ -154,6 +152,14 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
             [self startFinishedState];
         }
    }
+}
+
+- (void)addTrackIfNeeded
+{
+    if (!self.progressTrackLayer.superlayer) {
+        [self.layer addSublayer:self.progressTrackLayer];
+        [self.progressTrackLayer addSublayer:[self boxLayerInRect:[self rectForProgressCircle] fillColor:self.tintColor]];
+    }
 }
 
 #pragma mark - Action
@@ -289,9 +295,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     };
 }
 
-- (CAShapeLayer *)circleLayerWithRect:(CGRect)circleRect
-                          strokeColor:(UIColor *)strokeColor
-                          shadowColor:(UIColor *)shadowColor
+- (UIBezierPath *)circlePathInRect:(CGRect)circleRect
 {
     CGFloat radians = (90 * M_PI) / 180;
     CGFloat radius = CGRectGetWidth(circleRect) / 2.0f;
@@ -304,6 +308,14 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     [path addArcWithCenter:center radius:radius startAngle:(radians * 2) endAngle:-(radians) clockwise:YES];
     [path closePath];
     
+    return path;
+}
+
+- (CAShapeLayer *)circleLayerWithRect:(CGRect)circleRect
+                          strokeColor:(UIColor *)strokeColor
+                          shadowColor:(UIColor *)shadowColor
+{
+    UIBezierPath *path = [self circlePathInRect:circleRect];
     CAShapeLayer *circleLayer = [CAShapeLayer new];
     circleLayer.masksToBounds = NO;
     circleLayer.path = path.CGPath;
@@ -314,7 +326,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     if (shadowColor) {
         circleLayer.shadowPath = path.CGPath;
         circleLayer.shadowColor = shadowColor.CGColor;
-        circleLayer.shadowOpacity = 0.1f;
+        circleLayer.shadowOpacity = 0.15f;
         circleLayer.shadowRadius = kJNJProgressCircleDiameter / 2.0f;
         circleLayer.shadowOffset = CGSizeZero;
     }
@@ -323,6 +335,21 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     circleLayer.rasterizationScale = [[UIScreen mainScreen] scale];
     circleLayer.anchorPoint = (CGPoint) { 0.5f, 0.5f };
     return circleLayer;
+}
+
+- (CALayer *)boxLayerInRect:(CGRect)rect
+                  fillColor:(UIColor *)fillColor
+{
+    CGFloat boxSize = CGRectGetWidth(rect) / 3.0f;
+    
+    UIBezierPath *path = [UIBezierPath bezierPathWithRect:(CGRect) { CGPointZero, boxSize, boxSize }];
+    
+    CAShapeLayer *boxLayer = [CAShapeLayer layer];
+    boxLayer.fillColor = fillColor.CGColor;
+    boxLayer.path = path.CGPath;
+    boxLayer.position = (CGPoint) { CGRectGetMidX(rect) - boxSize / 2.0f, CGRectGetMidY(rect) - boxSize / 2.0f };
+    
+    return boxLayer;
 }
 
 - (UIColor *)glowColorForTintColor
