@@ -33,9 +33,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 @property (nonatomic, assign, readwrite) JNJProgressButtonState state;
 @property (nonatomic, strong) NSMutableDictionary *imageStateStore;
 
-@property (nonatomic, strong) UIImageView *startButtonImageView;
-@property (nonatomic, strong) UIImageView *endButtonImageView;
-
+@property (nonatomic, strong) UIImageView *buttonImageView;
 @property (nonatomic, strong) CAShapeLayer *progressButtonLayer;
 @property (nonatomic, strong) CAShapeLayer *progressTrackLayer;
 
@@ -69,10 +67,8 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     self.imageStateStore = [NSMutableDictionary dictionary];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
     
-    self.startButtonImageView = [UIImageView new];
-    [self addSubview:self.startButtonImageView];
-    self.endButtonImageView = [UIImageView new];
-    [self addSubview:self.endButtonImageView];
+    self.buttonImageView = [UIImageView new];
+    [self addSubview:self.buttonImageView];
 }
 
 #pragma mark - Properties
@@ -112,9 +108,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 {
     [super layoutSubviews];
     
-    CGPoint center = (CGPoint) { CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) };
-    self.startButtonImageView.center = center;
-    self.endButtonImageView.center = center;
+    self.buttonImageView.center = (CGPoint) { CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) };
 }
 
 #pragma mark - Accessibility
@@ -173,7 +167,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
             [self.delegate progressButtonStartButtonTapped:self];
         }
     } else if (self.state == JNJProgressButtonStateProgressing) {
-        [self cancelProgress];
+        [self endProgressWithState:JNJProgressButtonStateUnstarted];
         
         if ([self.delegate respondsToSelector:@selector(progressButtonDidCancelProgress:)]) {
             [self.delegate progressButtonDidCancelProgress:self];
@@ -199,12 +193,8 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
         [self.imageStateStore setObject:highlightImage forKey:@(state)];
     }
     
-    self.startButtonImageView.image = [self.imageStateStore objectForKey:@(JNJProgressButtonStateUnstarted)];
-    self.startButtonImageView.frame = (CGRect) { CGPointZero, self.startButtonImageView.image.size };
-    self.endButtonImageView.image = [self.imageStateStore objectForKey:@(JNJProgressButtonStateFinished)];
-    self.endButtonImageView.frame = (CGRect) { CGPointZero, self.endButtonImageView.image.size };
-    self.startButtonImageView.hidden = !(self.state == JNJProgressButtonStateUnstarted);
-    self.endButtonImageView.hidden = !(self.state == JNJProgressButtonStateFinished);
+    [self updateButtonImageForState:JNJProgressButtonStateUnstarted];
+
 }
 
 #pragma mark - Actions
@@ -214,16 +204,16 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     self.state = JNJProgressButtonStateProgressing;
 
     [UIView animateWithDuration:0.2 animations:^{
-        self.startButtonImageView.alpha = 0.0f;
-        self.startButtonImageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
+        self.buttonImageView.alpha = 0.0f;
+        self.buttonImageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
     }];
     
     [self startPreprogress];
 }
 
-- (void)cancelProgress
+- (void)endProgressWithState:(JNJProgressButtonState)state
 {
-    self.state = JNJProgressButtonStateUnstarted;
+    self.state = state;
     
     [self.progressTrackLayer removeFromSuperlayer];
     self.progressTrackLayer = nil;
@@ -235,8 +225,8 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     self.progressButtonLayer.transform = CATransform3DMakeScale(0, 0, 0);
     
     [UIView animateWithDuration:0.2 animations:^{
-        self.startButtonImageView.alpha = 1.0f;
-        self.startButtonImageView.transform = CGAffineTransformIdentity;
+        self.buttonImageView.alpha = 1.0f;
+        self.buttonImageView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
         [self.progressButtonLayer removeFromSuperlayer];
         self.progressButtonLayer = nil;
@@ -279,8 +269,8 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 - (void)startFinishedState
 {
-    // TODO(JNJ): Implement
-    NSLog(@"end");
+    [self updateButtonImageForState:JNJProgressButtonStateFinished];
+    [self endProgressWithState:JNJProgressButtonStateFinished];
 }
 
 #pragma mark - Helpers
@@ -370,13 +360,18 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 - (void)setImageViewAlphaIfNeeded:(CGFloat)alpha
 {
-    if (self.state == JNJProgressButtonStateUnstarted) {
-        self.startButtonImageView.alpha = alpha;
+   if (self.state == JNJProgressButtonStateFinished || self.state == JNJProgressButtonStateUnstarted) {
+        self.buttonImageView.alpha = alpha;
     }
-    
-    if (self.state == JNJProgressButtonStateFinished) {
-        self.endButtonImageView.alpha = alpha;
-    }
+}
+
+- (void)updateButtonImageForState:(JNJProgressButtonState)state
+{
+    CGAffineTransform transform = self.buttonImageView.transform;
+    self.buttonImageView.transform = CGAffineTransformIdentity;
+    self.buttonImageView.image = [self.imageStateStore objectForKey:@(state)];
+    self.buttonImageView.frame = (CGRect) { CGPointZero, self.buttonImageView.image.size };
+    self.buttonImageView.transform = transform;
 }
 
 #pragma mark - Touch Handling
