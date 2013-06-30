@@ -176,11 +176,18 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
 {
     self.state = JNJProgressButtonStateUnstarted;
     
-    [self.progressButtonLayer removeFromSuperlayer];
+    CABasicAnimation *shrinkAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    shrinkAnimation.toValue = @0.0f;
+    shrinkAnimation.duration = 0.25f;
+    [self.progressButtonLayer addAnimation:shrinkAnimation forKey:@"shrinkProgress"];
+    self.progressButtonLayer.transform = CATransform3DMakeScale(0, 0, 0);
     
     [UIView animateWithDuration:0.2 animations:^{
         self.startButtonImageView.alpha = 1.0f;
         self.startButtonImageView.transform = CGAffineTransformIdentity;
+    } completion:^(BOOL finished) {
+        [self.progressButtonLayer removeFromSuperlayer];
+        self.progressButtonLayer = nil;
     }];
 }
 
@@ -195,13 +202,14 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
                                              shadowColor:glowColor];
     self.progressButtonLayer.frame = self.bounds;
     [self.layer addSublayer:self.progressButtonLayer];
-    
+
     CAAnimationGroup *growAnimationGroup = [CAAnimationGroup animation];
     {
         CABasicAnimation *growAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
         growAnimation.fromValue = @0.0f;
         CABasicAnimation *fadeAnimation = [CABasicAnimation animationWithKeyPath:@"fillColor"];
         fadeAnimation.fromValue = (__bridge id)(glowColor.CGColor);
+        fadeAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseIn];
         growAnimationGroup.animations = @[ growAnimation, fadeAnimation ];
     }
     growAnimationGroup.duration = 0.25f;
@@ -242,7 +250,7 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
     circleLayer.strokeEnd = 0.9;
     circleLayer.shadowPath = path.CGPath;
     circleLayer.shadowColor = shadowColor.CGColor;
-    circleLayer.shadowOpacity = 0.2f;
+    circleLayer.shadowOpacity = 0.1f;
     circleLayer.shadowRadius = kJNJProgressCircleSize / 2.0f;
     circleLayer.shadowOffset = CGSizeZero;
     circleLayer.shouldRasterize = YES;
@@ -259,9 +267,9 @@ static CGFloat const kJNJProgressCircleSize = 20.0f;
     CGFloat hue, saturation, brightness, alpha;
     if ([tintColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {
         glowColor = [UIColor colorWithHue:hue
-                               saturation:saturation * 0.8f
+                               saturation:saturation * 0.7f
                                brightness:brightness
-                                    alpha:0.5f];
+                                    alpha:0.8f];
     }
     
     return glowColor;
