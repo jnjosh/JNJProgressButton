@@ -139,6 +139,8 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 - (void)updateButtonForProgress:(float)progress
 {
+    if (self.state != JNJProgressButtonStateProgressing) return;
+    
     if (0.0f < progress && progress <= 1.0f) {
         if (!self.progressTrackLayer.superlayer) {
             [self.layer addSublayer:self.progressTrackLayer];
@@ -217,6 +219,9 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 {
     self.state = JNJProgressButtonStateUnstarted;
     
+    [self.progressTrackLayer removeFromSuperlayer];
+    self.progressTrackLayer = nil;
+    
     CABasicAnimation *shrinkAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     shrinkAnimation.toValue = @0.0f;
     shrinkAnimation.duration = 0.25f;
@@ -288,7 +293,17 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
                           strokeColor:(UIColor *)strokeColor
                           shadowColor:(UIColor *)shadowColor
 {
-    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:circleRect];
+    CGFloat radians = (90 * M_PI) / 180;
+    CGFloat radius = CGRectGetWidth(circleRect) / 2.0f;
+    CGPoint center = (CGPoint) { CGRectGetMidX(circleRect), CGRectGetMidY(circleRect) };
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:(CGPoint) { CGRectGetMidX(circleRect), CGRectGetMinY(circleRect) }];
+    [path addArcWithCenter:center radius:radius startAngle:-(radians) endAngle:0 clockwise:YES];
+    [path addArcWithCenter:center radius:radius startAngle:0 endAngle:radians clockwise:YES];
+    [path addArcWithCenter:center radius:radius startAngle:radians endAngle:(radians * 2) clockwise:YES];
+    [path addArcWithCenter:center radius:radius startAngle:(radians * 2) endAngle:-(radians) clockwise:YES];
+    [path closePath];
+    
     CAShapeLayer *circleLayer = [CAShapeLayer new];
     circleLayer.masksToBounds = NO;
     circleLayer.path = path.CGPath;
