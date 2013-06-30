@@ -33,7 +33,7 @@
 @property (nonatomic, strong) UIImageView *startButtonImageView;
 @property (nonatomic, strong) UIImageView *endButtonImageView;
 
-@property (nonatomic, strong) CALayer *progressButtonLayer;
+@property (nonatomic, strong) CAShapeLayer *progressButtonLayer;
 
 @end
 
@@ -69,6 +69,8 @@
     [self addSubview:self.startButtonImageView];
     self.endButtonImageView = [UIImageView new];
     [self addSubview:self.endButtonImageView];
+    
+    
 }
 
 #pragma mark - Layout
@@ -156,11 +158,32 @@
         self.startButtonImageView.alpha = 0.0f;
         self.startButtonImageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
     }];
+    
+    self.progressButtonLayer = [CAShapeLayer new];
+    UIBezierPath *path = [UIBezierPath bezierPathWithOvalInRect:(CGRect) { CGPointZero, self.startButtonImageView.image.size.height, self.startButtonImageView.image.size.height }];
+    self.progressButtonLayer.path = path.CGPath;
+    self.progressButtonLayer.fillColor = [UIColor clearColor].CGColor;
+    
+    UIColor *strokeColor = self.tintColor ?: [UIColor blackColor];
+    self.progressButtonLayer.strokeColor = strokeColor.CGColor;
+    self.progressButtonLayer.lineWidth = 1.0f;
+    self.progressButtonLayer.strokeEnd = 0.9;
+    self.progressButtonLayer.position = self.startButtonImageView.frame.origin;
+    [self.layer addSublayer:self.progressButtonLayer];
+    
+    CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform"];
+    rotationAnimation.fromValue = [NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation(0)];
+    rotationAnimation.toValue = [NSValue valueWithCGAffineTransform:CGAffineTransformMakeRotation((360 * M_PI)/180)];
+    rotationAnimation.repeatCount = CGFLOAT_MAX;
+    rotationAnimation.duration = 0.3f;
+    [self.progressButtonLayer addAnimation:rotationAnimation forKey:@"rotate"];
 }
 
 - (void)cancelProgress
 {
     self.state = JNJProgressButtonStateUnstarted;
+    
+    [self.progressButtonLayer removeFromSuperlayer];
     
     [UIView animateWithDuration:0.2 animations:^{
         self.startButtonImageView.alpha = 1.0f;
