@@ -66,7 +66,9 @@
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
     
     self.startButtonImageView = [UIImageView new];
-    [self addSubview:self.startButtonImageView];    
+    [self addSubview:self.startButtonImageView];
+    self.endButtonImageView = [UIImageView new];
+    [self addSubview:self.endButtonImageView];
 }
 
 #pragma mark - Layout
@@ -75,9 +77,9 @@
 {
     [super layoutSubviews];
     
-    self.startButtonImageView.image = [self.imageStateStore objectForKey:@(self.state)];
-    self.startButtonImageView.frame = (CGRect) { CGPointZero, self.startButtonImageView.image.size };
-    self.startButtonImageView.center = (CGPoint) { CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) };
+    CGPoint center = (CGPoint) { CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds) };
+    self.startButtonImageView.center = center;
+    self.endButtonImageView.center = center;
 }
 
 #pragma mark - Accessibility
@@ -103,18 +105,22 @@
 
 - (void)progressButtonWasTapped:(UIGestureRecognizer *)gestureRecognizer
 {
-    if (self.state == JNJProgressButtonStateUnstarted && [self.delegate respondsToSelector:@selector(progressButtonStartButtonTapped:)]) {
-        [UIView animateWithDuration:0.2 animations:^{
-            self.startButtonImageView.alpha = 0.0;
-        }];
-        self.state = JNJProgressButtonStateProgressing;
-        [self.delegate progressButtonStartButtonTapped:self];
-    } else if (self.state == JNJProgressButtonStateProgressing && [self.delegate respondsToSelector:@selector(progressButtonDidCancelProgress:)]) {
-        self.state = JNJProgressButtonStateUnstarted;
+    if (self.state == JNJProgressButtonStateUnstarted) {
+        [self startProgress];
+        
+        if ([self.delegate respondsToSelector:@selector(progressButtonStartButtonTapped:)]) {
+            [self.delegate progressButtonStartButtonTapped:self];
+        }
+    } else if (self.state == JNJProgressButtonStateProgressing) {
         [self cancelProgress];
-        [self.delegate progressButtonDidCancelProgress:self];
-    } else if (self.state == JNJProgressButtonStateFinished && [self.delegate respondsToSelector:@selector(progressButtonEndButtonTapped:)]) {
-        [self.delegate progressButtonEndButtonTapped:self];
+        
+        if ([self.delegate respondsToSelector:@selector(progressButtonDidCancelProgress:)]) {
+            [self.delegate progressButtonDidCancelProgress:self];
+        }
+    } else if (self.state == JNJProgressButtonStateFinished) {
+        if ([self.delegate respondsToSelector:@selector(progressButtonEndButtonTapped:)]) {
+            [self.delegate progressButtonEndButtonTapped:self];
+        }
     }
 }
 
@@ -131,16 +137,68 @@
     if (highlightImage) {
         [self.imageStateStore setObject:highlightImage forKey:@(state)];
     }
+    
+    self.startButtonImageView.image = [self.imageStateStore objectForKey:@(JNJProgressButtonStateUnstarted)];
+    self.startButtonImageView.frame = (CGRect) { CGPointZero, self.startButtonImageView.image.size };
+    self.endButtonImageView.image = [self.imageStateStore objectForKey:@(JNJProgressButtonStateFinished)];
+    self.endButtonImageView.frame = (CGRect) { CGPointZero, self.endButtonImageView.image.size };
+    self.startButtonImageView.hidden = !(self.state == JNJProgressButtonStateUnstarted);
+    self.endButtonImageView.hidden = !(self.state == JNJProgressButtonStateFinished);
 }
 
 #pragma mark - Actions
 
+- (void)startProgress
+{
+    self.state = JNJProgressButtonStateProgressing;
+
+    [UIView animateWithDuration:0.2 animations:^{
+        self.startButtonImageView.alpha = 0.0f;
+        self.startButtonImageView.transform = CGAffineTransformMakeScale(0.5f, 0.5f);
+    }];
+}
+
 - (void)cancelProgress
 {
+    self.state = JNJProgressButtonStateUnstarted;
+    
     [UIView animateWithDuration:0.2 animations:^{
-        self.startButtonImageView.alpha = 1.0;
+        self.startButtonImageView.alpha = 1.0f;
+        self.startButtonImageView.transform = CGAffineTransformIdentity;
     }];
+}
 
+#pragma mark - Helpers
+
+- (void)setImageViewAlphaIfNeeded:(CGFloat)alpha
+{
+    if (self.state == JNJProgressButtonStateUnstarted) {
+        self.startButtonImageView.alpha = alpha;
+    }
+    
+    if (self.state == JNJProgressButtonStateFinished) {
+        self.endButtonImageView.alpha = alpha;
+    }
+}
+
+#pragma mark - Touch Handling
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesBegan:touches withEvent:event];
+    [self setImageViewAlphaIfNeeded:0.5f];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesEnded:touches withEvent:event];
+    [self setImageViewAlphaIfNeeded:1.0f];
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    [super touchesCancelled:touches withEvent:event];
+    [self setImageViewAlphaIfNeeded:1.0f];
 }
 
 @end

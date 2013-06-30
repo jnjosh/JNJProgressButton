@@ -14,6 +14,8 @@
 		A436A25E177EB21B003F5185 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A436A25D177EB21B003F5185 /* QuartzCore.framework */; };
 		A436A261177EBAFA003F5185 /* 56-cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = A436A25F177EBAFA003F5185 /* 56-cloud.png */; };
 		A436A262177EBAFA003F5185 /* 56-cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A436A260177EBAFA003F5185 /* 56-cloud@2x.png */; };
+		A436A266177FB25C003F5185 /* 06-magnify.png in Resources */ = {isa = PBXBuildFile; fileRef = A436A264177FB25C003F5185 /* 06-magnify.png */; };
+		A436A267177FB25C003F5185 /* 06-magnify@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = A436A265177FB25C003F5185 /* 06-magnify@2x.png */; };
 		A464A216177E9DB600BCE741 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A464A215177E9DB600BCE741 /* UIKit.framework */; };
 		A464A218177E9DB600BCE741 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A464A217177E9DB600BCE741 /* Foundation.framework */; };
 		A464A21A177E9DB600BCE741 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A464A219177E9DB600BCE741 /* CoreGraphics.framework */; };
@@ -35,6 +37,8 @@
 		A436A25D177EB21B003F5185 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		A436A25F177EBAFA003F5185 /* 56-cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "56-cloud.png"; sourceTree = "<group>"; };
 		A436A260177EBAFA003F5185 /* 56-cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "56-cloud@2x.png"; sourceTree = "<group>"; };
+		A436A264177FB25C003F5185 /* 06-magnify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "06-magnify.png"; sourceTree = "<group>"; };
+		A436A265177FB25C003F5185 /* 06-magnify@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "06-magnify@2x.png"; sourceTree = "<group>"; };
 		A464A212177E9DB600BCE741 /* JNJProgressButton-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "JNJProgressButton-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A464A215177E9DB600BCE741 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		A464A217177E9DB600BCE741 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -89,6 +93,8 @@
 		A436A263177EBAFF003F5185 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A436A264177FB25C003F5185 /* 06-magnify.png */,
+				A436A265177FB25C003F5185 /* 06-magnify@2x.png */,
 				A436A25F177EBAFA003F5185 /* 56-cloud.png */,
 				A436A260177EBAFA003F5185 /* 56-cloud@2x.png */,
 			);
@@ -217,6 +223,8 @@
 				A436A257177EA279003F5185 /* JNJApplicationWindow.xib in Resources */,
 				A436A261177EBAFA003F5185 /* 56-cloud.png in Resources */,
 				A436A262177EBAFA003F5185 /* 56-cloud@2x.png in Resources */,
+				A436A266177FB25C003F5185 /* 06-magnify.png in Resources */,
+				A436A267177FB25C003F5185 /* 06-magnify@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

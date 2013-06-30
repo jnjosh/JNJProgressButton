@@ -43,6 +43,9 @@
     [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"]
                        highlightedImage:nil
                                forState:JNJProgressButtonStateUnstarted];
+    [self.progressButton setButtonImage:[UIImage imageNamed:@"06-magnify"]
+                       highlightedImage:nil
+                               forState:JNJProgressButtonStateFinished];
 }
 
 #pragma mark - JNJProgressButtonDelegate
