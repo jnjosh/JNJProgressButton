@@ -7,7 +7,7 @@ As part of the [Objective-C Hackathon](https://objectivechackathon.appspot.com) 
 ## TODO ##
 
 - Do better testing with AutoLayout. 
-- Add support for butter end state buttons.
+- Add support for better end state buttons.
 - Refactor out the stupid.
 - Properly handle -tintColor for the future.
 - CocoaPods
