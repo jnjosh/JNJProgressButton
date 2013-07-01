@@ -31,7 +31,6 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 @interface JNJProgressButton ()
 
 @property (nonatomic, assign, readwrite) JNJProgressButtonState state;
-@property (nonatomic, strong) NSMutableDictionary *imageStateStore;
 
 @property (nonatomic, strong) UIImageView *buttonImageView;
 @property (nonatomic, strong) CAShapeLayer *progressButtonLayer;
@@ -64,7 +63,6 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 - (void)commonInit
 {
     self.state = JNJProgressButtonStateUnstarted;
-    self.imageStateStore = [NSMutableDictionary dictionary];
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
     
     self.buttonImageView = [UIImageView new];
@@ -100,6 +98,28 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
         _progressTrackLayer.lineWidth = 3.0f;
     }
     return _progressTrackLayer;
+}
+
+- (void)setStartButtonImage:(UIImage *)startButtonImage
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(startButtonImage))];
+    _startButtonImage = startButtonImage;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(startButtonImage))];
+
+    if (self.state == JNJProgressButtonStateUnstarted) {
+        [self updateButtonImageForState:self.state];
+    }
+}
+
+- (void)setEndButtonImage:(UIImage *)endButtonImage
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(endButtonImage))];
+    _endButtonImage = endButtonImage;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(endButtonImage))];
+    
+    if (self.state == JNJProgressButtonStateFinished) {
+        [self updateButtonImageForState:self.state];
+    }
 }
 
 #pragma mark - Layout
@@ -177,24 +197,6 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
             [self.delegate progressButtonEndButtonTapped:self];
         }
     }
-}
-
-#pragma mark - Button Images
-
-- (void)setButtonImage:(UIImage *)image
-      highlightedImage:(UIImage *)highlightImage
-              forState:(JNJProgressButtonState)state
-{
-    NSParameterAssert(image);
-    
-    [self.imageStateStore setObject:image forKey:@(state)];
-    
-    if (highlightImage) {
-        [self.imageStateStore setObject:highlightImage forKey:@(state)];
-    }
-    
-    [self updateButtonImageForState:JNJProgressButtonStateUnstarted];
-
 }
 
 #pragma mark - Actions
@@ -275,6 +277,19 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 #pragma mark - Helpers
 
+- (UIImage *)imageForState:(JNJProgressButtonState)state
+{
+    UIImage *image = nil;
+    
+    if (state == JNJProgressButtonStateUnstarted) {
+        image = self.startButtonImage;
+    } else if (state == JNJProgressButtonStateFinished) {
+        image = self.endButtonImage;
+    }
+    
+    return image;
+}
+
 - (CGRect)rectForProgressCircle
 {
     return (CGRect) {
@@ -332,7 +347,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 {
     CGFloat boxSize = CGRectGetWidth(rect) / 3.0f;
     
-    UIBezierPath *path = [UIBezierPath bezierPathWithRect:(CGRect) { CGPointZero, boxSize, boxSize }];
+    UIBezierPath *path = [UIBezierPath bezierPathWithRect:(CGRect) { CGPointZero, { boxSize, boxSize } }];
     
     CAShapeLayer *boxLayer = [CAShapeLayer layer];
     boxLayer.fillColor = fillColor.CGColor;
@@ -369,7 +384,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 {
     CGAffineTransform transform = self.buttonImageView.transform;
     self.buttonImageView.transform = CGAffineTransformIdentity;
-    self.buttonImageView.image = [self.imageStateStore objectForKey:@(state)];
+    self.buttonImageView.image = [self imageForState:state];
     self.buttonImageView.frame = (CGRect) { CGPointZero, self.buttonImageView.image.size };
     self.buttonImageView.transform = transform;
 }

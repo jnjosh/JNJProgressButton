@@ -48,20 +48,14 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) float progress;
 
+@property (nonatomic, strong) UIImage *startButtonImage;
+@property (nonatomic, strong) UIImage *endButtonImage;
+
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.
  @param animated Boolean flag to specify if this change should be animated
  */
 - (void)setProgress:(float)progress
            animated:(BOOL)animated;
-
-/** Set the button image
- @param image Image to display in the button for the specified status
- @param highlightImage Image to display in the button for the specified status and is highlighted
- @param state State identifies when to use the above images. JNJProgressButtonStateProgressing is ignored as it is generated.
- */
-- (void)setButtonImage:(UIImage *)image
-      highlightedImage:(UIImage *)highlightImage
-             forState:(JNJProgressButtonState)state;
 
 @end

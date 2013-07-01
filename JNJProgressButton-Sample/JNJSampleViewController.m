@@ -41,12 +41,8 @@
     
     self.progressButton.delegate = self;
     self.progressButton.tintColor = [UIColor blueColor];
-    [self.progressButton setButtonImage:[UIImage imageNamed:@"56-cloud"]
-                       highlightedImage:nil
-                               forState:JNJProgressButtonStateUnstarted];
-    [self.progressButton setButtonImage:[UIImage imageNamed:@"06-magnify"]
-                       highlightedImage:nil
-                               forState:JNJProgressButtonStateFinished];
+    self.progressButton.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+    self.progressButton.endButtonImage = [UIImage imageNamed:@"06-magnify"];    
 }
 
 #pragma mark - JNJProgressButtonDelegate
