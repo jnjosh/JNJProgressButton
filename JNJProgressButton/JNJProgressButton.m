@@ -28,9 +28,15 @@
 static CGFloat const kJNJProgressCircleDiameter = 20.0f;
 static CGFloat const kJNJProgressStopWidth = 5.0f;
 
+typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
+    JNJProgressButtonStateUnstarted,
+    JNJProgressButtonStateProgressing,
+    JNJProgressButtonStateFinished
+};
+
 @interface JNJProgressButton ()
 
-@property (nonatomic, assign, readwrite) JNJProgressButtonState state;
+@property (nonatomic, assign) JNJProgressButtonState state;
 
 @property (nonatomic, strong) UIImageView *buttonImageView;
 @property (nonatomic, strong) CAShapeLayer *progressButtonLayer;
@@ -62,6 +68,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 - (void)commonInit
 {
+    self.needsProgress = YES;
     self.state = JNJProgressButtonStateUnstarted;
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
     
@@ -122,6 +129,24 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     }
 }
 
+- (void)setNeedsProgress:(BOOL)needsProgress
+{
+    [self willChangeValueForKey:NSStringFromSelector(@selector(needsProgress))];
+    _needsProgress = needsProgress;
+    [self didChangeValueForKey:NSStringFromSelector(@selector(needsProgress))];
+    
+    if (self.state != JNJProgressButtonStateProgressing) {
+        if (needsProgress) {
+            self.state = JNJProgressButtonStateUnstarted;
+        } else {
+            self.state = JNJProgressButtonStateFinished;
+        }
+        
+        [self updateButtonImageForState:self.state];
+        [self setNeedsLayout];
+    }
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews
@@ -165,7 +190,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
         if (progress == 1.0f) {
             [self startFinishedState];
         }
-   }
+    }
 }
 
 - (void)addTrackIfNeeded

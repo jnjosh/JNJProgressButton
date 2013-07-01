@@ -28,6 +28,8 @@
 @interface JNJSampleViewController () <JNJProgressButtonDelegate>
 
 @property (nonatomic, weak) IBOutlet JNJProgressButton *progressButton;
+@property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton2;
+@property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton3;
 
 @end
 
@@ -42,7 +44,36 @@
     self.progressButton.delegate = self;
     self.progressButton.tintColor = [UIColor blueColor];
     self.progressButton.startButtonImage = [UIImage imageNamed:@"56-cloud"];
-    self.progressButton.endButtonImage = [UIImage imageNamed:@"06-magnify"];    
+    self.progressButton.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    
+    self.progressButton2.delegate = self;
+    self.progressButton2.tintColor = [UIColor greenColor];
+    self.progressButton2.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+    self.progressButton2.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+
+    self.progressButton3.delegate = self;
+    self.progressButton3.tintColor = [UIColor redColor];
+    self.progressButton3.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+    self.progressButton3.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    self.progressButton3.needsProgress = NO;
+}
+
+#pragma mark - Actions
+
+- (IBAction)resetProgressButton:(id)sender
+{
+    self.progressButton.needsProgress = YES;
+    self.progressButton2.needsProgress = YES;
+}
+
+- (IBAction)showActionSheet:(id)sender
+{
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Cancel"
+                                         destructiveButtonTitle:nil
+                                              otherButtonTitles:@"Test", @"Test 1", nil];
+    [sheet showInView:self.view];
 }
 
 #pragma mark - JNJProgressButtonDelegate
@@ -57,12 +88,11 @@
         while (index <= 100) {
             [NSThread sleepForTimeInterval:0.125];
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.progressButton.progress = (index / 100.0f);
+                button.progress = (index / 100.0f);
             });
             index++;
         }
     });
-    
 }
 
 - (void)progressButtonEndButtonTapped:(JNJProgressButton *)button

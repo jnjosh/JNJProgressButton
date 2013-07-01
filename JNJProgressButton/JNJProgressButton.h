@@ -34,22 +34,20 @@
 
 @end
 
-typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
-    JNJProgressButtonStateUnstarted,
-    JNJProgressButtonStateProgressing,
-    JNJProgressButtonStateFinished
-};
-
 @interface JNJProgressButton : UIView
 
 @property (nonatomic, weak) id<JNJProgressButtonDelegate> delegate;
-@property (nonatomic, assign, readonly) JNJProgressButtonState state;
 
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) float progress;
 
 @property (nonatomic, strong) UIImage *startButtonImage;
 @property (nonatomic, strong) UIImage *endButtonImage;
+
+/** Updates the state of the button to control the button's state.
+ @discussion Only will take affect when not already progressing. Can also be used to start the button in it's end state, or to reset the state back to start state.
+ */
+@property (nonatomic, assign) BOOL needsProgress;
 
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.
