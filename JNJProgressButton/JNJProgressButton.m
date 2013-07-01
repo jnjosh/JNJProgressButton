@@ -176,7 +176,7 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
     }
 }
 
-#pragma mark - Action
+#pragma mark - Actions
 
 - (void)progressButtonWasTapped:(UIGestureRecognizer *)gestureRecognizer
 {
@@ -198,8 +198,6 @@ static CGFloat const kJNJProgressStopWidth = 5.0f;
         }
     }
 }
-
-#pragma mark - Actions
 
 - (void)startProgress
 {
