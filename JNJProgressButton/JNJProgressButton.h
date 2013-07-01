@@ -28,8 +28,19 @@
 
 @protocol JNJProgressButtonDelegate <NSObject>
 
+/** Invoked when the progress button is tapped for the first time, before progress has occured. 
+ @param button The instance of the button the event occurred on.
+ */
 - (void)progressButtonStartButtonTapped:(JNJProgressButton *)button;
+
+/** Invoked when the progress button is tapped after progress has occured. This is an opportunity to perform an action after the progress has completed.
+ @param button The instance of the button the event occurred on.
+ */
 - (void)progressButtonEndButtonTapped:(JNJProgressButton *)button;
+
+/** Invoked when the progress button is tapped while progressing. This is an opportunity to cancel the operation you are displaying progress for.
+ @param button The instance of the button the event occurred on.
+ */
 - (void)progressButtonDidCancelProgress:(JNJProgressButton *)button;
 
 @end
