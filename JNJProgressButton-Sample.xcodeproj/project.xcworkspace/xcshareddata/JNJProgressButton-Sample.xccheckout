@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>2608CE8A-7188-48B3-9F64-D8C2272BD908</string>
+	<key>IDESourceControlProjectName</key>
+	<string>JNJProgressButton-Sample</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>F9614594-DDF0-4F04-BB46-5B9F390B92C6</key>
+		<string>ssh://github.com/jnjosh/JNJProgressButton.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>JNJProgressButton-Sample.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>F9614594-DDF0-4F04-BB46-5B9F390B92C6</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>ssh://github.com/jnjosh/JNJProgressButton.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>F9614594-DDF0-4F04-BB46-5B9F390B92C6</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>F9614594-DDF0-4F04-BB46-5B9F390B92C6</string>
+			<key>IDESourceControlWCCName</key>
+			<string>JNJProgressButton</string>
+		</dict>
+	</array>
+</dict>
+</plist>

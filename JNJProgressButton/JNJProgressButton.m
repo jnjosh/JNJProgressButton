@@ -78,14 +78,6 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 
 #pragma mark - Properties
 
-- (UIColor *)tintColor
-{
-    if (!_tintColor) {
-        _tintColor = [UIColor blackColor];
-    }
-    return _tintColor;
-}
-
 - (void)setProgress:(float)progress
 {
     [self willChangeValueForKey:NSStringFromSelector(@selector(progress))];
@@ -100,7 +92,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     if (!_progressTrackLayer) {
         CGRect trackRect = CGRectInset([self rectForProgressCircle], 1.0f, 1.0f);
         _progressTrackLayer = [self circleLayerWithRect:trackRect
-                                            strokeColor:self.tintColor
+                                            strokeColor:[self trackColor]
                                             shadowColor:nil];
         _progressTrackLayer.lineWidth = 3.0f;
     }
@@ -197,7 +189,8 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 {
     if (!self.progressTrackLayer.superlayer) {
         [self.layer addSublayer:self.progressTrackLayer];
-        [self.progressTrackLayer addSublayer:[self boxLayerInRect:[self rectForProgressCircle] fillColor:self.tintColor]];
+        [self.progressTrackLayer addSublayer:[self boxLayerInRect:[self rectForProgressCircle]
+                                                        fillColor:[self trackColor]]];
     }
 }
 
@@ -260,7 +253,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 
 - (void)startPreprogress
 {
-    UIColor *strokeColor = self.tintColor;
+    UIColor *strokeColor = [self trackColor];
     UIColor *glowColor = [self glowColorForTintColor];
     CGRect circleRect = [self rectForProgressCircle];
     
@@ -368,7 +361,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 - (CALayer *)boxLayerInRect:(CGRect)rect
                   fillColor:(UIColor *)fillColor
 {
-    CGFloat boxSize = CGRectGetWidth(rect) / 3.0f;
+    CGFloat boxSize = kJNJProgressStopWidth;
     
     UIBezierPath *path = [UIBezierPath bezierPathWithRect:(CGRect) { CGPointZero, { boxSize, boxSize } }];
     
@@ -380,10 +373,15 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     return boxLayer;
 }
 
+- (UIColor *)trackColor
+{
+    return self.tintColor ?: [UIColor darkGrayColor];
+}
+
 - (UIColor *)glowColorForTintColor
 {
     UIColor *glowColor = nil;
-    UIColor *tintColor = self.tintColor;
+    UIColor *tintColor = [self trackColor];
 
     CGFloat hue, saturation, brightness, alpha;
     if ([tintColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {

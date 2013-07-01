@@ -47,7 +47,6 @@
     self.progressButton.endButtonImage = [UIImage imageNamed:@"06-magnify"];
     
     self.progressButton2.delegate = self;
-    self.progressButton2.tintColor = [UIColor greenColor];
     self.progressButton2.startButtonImage = [UIImage imageNamed:@"56-cloud"];
     self.progressButton2.endButtonImage = [UIImage imageNamed:@"06-magnify"];
 
