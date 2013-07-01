@@ -86,7 +86,7 @@
         [NSThread sleepForTimeInterval:3];
         NSInteger index = 0;
         while (index <= 100) {
-            [NSThread sleepForTimeInterval:0.125];
+            [NSThread sleepForTimeInterval:0.04];
             dispatch_async(dispatch_get_main_queue(), ^{
                 button.progress = (index / 100.0f);
             });
