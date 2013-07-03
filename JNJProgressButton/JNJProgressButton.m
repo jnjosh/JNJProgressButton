@@ -255,7 +255,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 - (void)startPreprogress
 {
     UIColor *strokeColor = [self trackColor];
-    UIColor *glowColor = [self glowColorForTintColor];
+    UIColor *glowColor = [self glowColorForTrackColor];
     CGRect circleRect = [self rectForProgressCircle];
     
     self.progressButtonLayer = [self circleLayerWithRect:circleRect
@@ -379,7 +379,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     return self.tintColor ?: [UIColor darkGrayColor];
 }
 
-- (UIColor *)glowColorForTintColor
+- (UIColor *)glowColorForTrackColor
 {
     UIColor *glowColor = nil;
     UIColor *tintColor = [self trackColor];
