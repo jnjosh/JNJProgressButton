@@ -30,6 +30,7 @@
 @property (nonatomic, weak) IBOutlet JNJProgressButton *progressButton;
 @property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton2;
 @property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton3;
+@property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton4;
 
 @end
 
@@ -55,6 +56,11 @@
     self.progressButton3.startButtonImage = [UIImage imageNamed:@"56-cloud"];
     self.progressButton3.endButtonImage = [UIImage imageNamed:@"06-magnify"];
     self.progressButton3.needsProgress = NO;
+    
+    self.progressButton4.delegate = self;
+    self.progressButton4.tintColor = [UIColor whiteColor];
+    self.progressButton4.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+    self.progressButton4.endButtonImage = [UIImage imageNamed:@"06-magnify"];
 }
 
 #pragma mark - Actions
@@ -63,6 +69,7 @@
 {
     self.progressButton.needsProgress = YES;
     self.progressButton2.needsProgress = YES;
+    self.progressButton4.needsProgress = YES;
 }
 
 - (IBAction)showActionSheet:(id)sender

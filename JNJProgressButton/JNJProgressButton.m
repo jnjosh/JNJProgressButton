@@ -26,6 +26,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 static CGFloat const kJNJProgressCircleDiameter = 20.0f;
+static CGFloat const kJNJProgressCircleShadowRadius = 5.0f;
 static CGFloat const kJNJProgressStopWidth = 5.0f;
 
 typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
@@ -348,7 +349,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
         circleLayer.shadowPath = path.CGPath;
         circleLayer.shadowColor = shadowColor.CGColor;
         circleLayer.shadowOpacity = 0.15f;
-        circleLayer.shadowRadius = kJNJProgressCircleDiameter / 2.0f;
+        circleLayer.shadowRadius = kJNJProgressCircleShadowRadius;
         circleLayer.shadowOffset = CGSizeZero;
     }
     
@@ -383,12 +384,15 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     UIColor *glowColor = nil;
     UIColor *tintColor = [self trackColor];
 
-    CGFloat hue, saturation, brightness, alpha;
+    CGFloat hue, saturation, brightness, alpha, white;
     if ([tintColor getHue:&hue saturation:&saturation brightness:&brightness alpha:&alpha]) {
         glowColor = [UIColor colorWithHue:hue
                                saturation:saturation * 0.7f
                                brightness:brightness
                                     alpha:0.8f];
+    } else if ([tintColor getWhite:&white alpha:&alpha]) {
+        glowColor = [UIColor colorWithWhite:white * 0.7f
+                                      alpha:0.8f];
     }
     
     return glowColor;
