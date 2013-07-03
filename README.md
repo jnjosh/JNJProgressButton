@@ -10,7 +10,6 @@ As part of the [Objective-C Hackathon](https://objectivechackathon.appspot.com) 
 - Add support for better end state buttons.
 - Refactor out the stupid.
 - Properly handle -tintColor for the future.
-- CocoaPods
 
 ## Usage ##
 
