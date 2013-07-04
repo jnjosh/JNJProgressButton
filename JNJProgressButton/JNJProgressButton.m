@@ -40,7 +40,7 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 @property (nonatomic, assign) JNJProgressButtonState state;
 
 @property (nonatomic, strong) UIImageView *buttonImageView;
-@property (nonatomic, strong) CAShapeLayer *progressButtonLayer;
+@property (nonatomic, strong) CAShapeLayer *progressCircleLayer;
 @property (nonatomic, strong) CAShapeLayer *progressTrackLayer;
 
 @end
@@ -175,8 +175,8 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     
     if (0.0f < progress && progress <= 1.0f) {
         [self addTrackIfNeeded];
-        self.progressButtonLayer.strokeEnd = 1.0f;
-        [self.progressButtonLayer removeAllAnimations];
+        self.progressCircleLayer.strokeEnd = 1.0f;
+        [self.progressCircleLayer removeAllAnimations];
 
         self.progressTrackLayer.strokeEnd = progress;
 
@@ -240,15 +240,15 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     CABasicAnimation *shrinkAnimation = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
     shrinkAnimation.toValue = @0.0f;
     shrinkAnimation.duration = 0.25f;
-    [self.progressButtonLayer addAnimation:shrinkAnimation forKey:@"shrinkProgress"];
-    self.progressButtonLayer.transform = CATransform3DMakeScale(0, 0, 0);
+    [self.progressCircleLayer addAnimation:shrinkAnimation forKey:@"shrinkProgress"];
+    self.progressCircleLayer.transform = CATransform3DMakeScale(0, 0, 0);
     
     [UIView animateWithDuration:0.2 animations:^{
         self.buttonImageView.alpha = 1.0f;
         self.buttonImageView.transform = CGAffineTransformIdentity;
     } completion:^(BOOL finished) {
-        [self.progressButtonLayer removeFromSuperlayer];
-        self.progressButtonLayer = nil;
+        [self.progressCircleLayer removeFromSuperlayer];
+        self.progressCircleLayer = nil;
     }];
 }
 
@@ -258,12 +258,12 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     UIColor *glowColor = [self glowColorForTrackColor];
     CGRect circleRect = [self rectForProgressCircle];
     
-    self.progressButtonLayer = [self circleLayerWithRect:circleRect
+    self.progressCircleLayer = [self circleLayerWithRect:circleRect
                                              strokeColor:strokeColor
                                              shadowColor:glowColor];
-    self.progressButtonLayer.frame = self.bounds;
-    self.progressButtonLayer.strokeEnd = 0.9;
-    [self.layer addSublayer:self.progressButtonLayer];
+    self.progressCircleLayer.frame = self.bounds;
+    self.progressCircleLayer.strokeEnd = 0.9;
+    [self.layer addSublayer:self.progressCircleLayer];
 
     CAAnimationGroup *growAnimationGroup = [CAAnimationGroup animation];
     {
@@ -276,14 +276,14 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     }
     growAnimationGroup.duration = 0.25f;
     growAnimationGroup.removedOnCompletion = YES;
-    [self.progressButtonLayer addAnimation:growAnimationGroup forKey:@"scale"];
+    [self.progressCircleLayer addAnimation:growAnimationGroup forKey:@"scale"];
     
     CABasicAnimation *rotationAnimation = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
     rotationAnimation.fromValue = @0.0f;
     rotationAnimation.toValue = @(M_PI * 2);
     rotationAnimation.repeatCount = CGFLOAT_MAX;
     rotationAnimation.duration = 1.0f;
-    [self.progressButtonLayer addAnimation:rotationAnimation forKey:@"rotate"];
+    [self.progressCircleLayer addAnimation:rotationAnimation forKey:@"rotate"];
 }
 
 - (void)startFinishedState
