@@ -140,6 +140,11 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
     }
 }
 
+- (BOOL)isProgressing
+{
+    return self.state == JNJProgressButtonStateProgressing;
+}
+
 #pragma mark - Layout
 
 - (void)layoutSubviews

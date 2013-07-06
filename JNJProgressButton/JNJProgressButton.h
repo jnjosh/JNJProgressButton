@@ -53,6 +53,7 @@ typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
 
 @property (nonatomic, strong) UIColor *tintColor;
 @property (nonatomic, assign) float progress;
+@property (nonatomic, assign, readonly, getter = isProgressing) BOOL progressing;
 
 @property (nonatomic, strong) UIImage *startButtonImage;
 @property (nonatomic, strong) UIImage *endButtonImage;

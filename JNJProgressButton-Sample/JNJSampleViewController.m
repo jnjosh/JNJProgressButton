@@ -42,25 +42,66 @@
 {
     [super viewDidLoad];
     
-    self.progressButton.delegate = self;
-    self.progressButton.tintColor = [UIColor blueColor];
-    self.progressButton.startButtonImage = [UIImage imageNamed:@"56-cloud"];
-    self.progressButton.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    // Sample that shows the button over a transparent background. Transparency set in the nib.
+    {
+        self.progressButton.delegate = self;
+        self.progressButton.tintColor = [UIColor blueColor];
+        self.progressButton.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+        self.progressButton.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    }
     
-    self.progressButton2.delegate = self;
-    self.progressButton2.startButtonImage = [UIImage imageNamed:@"56-cloud"];
-    self.progressButton2.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    // Sample that shows the button over a white background, with it's default color. Also displays the block syntax
+    {
+        self.progressButton2.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+        self.progressButton2.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+        
+        __weak typeof(self) weak_self = self;
+        self.progressButton2.startButtonWasTapped = ^(JNJProgressButton *button) {
+            NSLog(@"Start button was tapped. From the block.");
+            [weak_self startProgressWithButton:button];
+        };
+        self.progressButton2.endButtonWasTapped = ^(JNJProgressButton *button) {
+            NSLog(@"End button was tapped. From the block.");
+        };
+        self.progressButton2.progressCanceled = ^(JNJProgressButton *button) {
+            NSLog(@"Progress Cancelled. From the block.");
+        };
+    }
 
-    self.progressButton3.delegate = self;
-    self.progressButton3.tintColor = [UIColor redColor];
-    self.progressButton3.startButtonImage = [UIImage imageNamed:@"56-cloud"];
-    self.progressButton3.endButtonImage = [UIImage imageNamed:@"06-magnify"];
-    self.progressButton3.needsProgress = NO;
+    // Sample that shows the button defaulted to the end state. This is helpful if the progress has already been completed and you want to start the button in the end state.
+    {
+        self.progressButton3.delegate = self;
+        self.progressButton3.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+        self.progressButton3.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+        self.progressButton3.needsProgress = NO;
+    }
     
-    self.progressButton4.delegate = self;
-    self.progressButton4.tintColor = [UIColor whiteColor];
-    self.progressButton4.startButtonImage = [UIImage imageNamed:@"56-cloud"];
-    self.progressButton4.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    // Sample that shows the button over a black background with a white tint color
+    {
+        self.progressButton4.delegate = self;
+        self.progressButton4.tintColor = [UIColor whiteColor];
+        self.progressButton4.startButtonImage = [UIImage imageNamed:@"56-cloud"];
+        self.progressButton4.endButtonImage = [UIImage imageNamed:@"06-magnify"];
+    }
+}
+
+#pragma mark - JNJProgressButtonDelegate
+
+- (void)progressButtonStartButtonTapped:(JNJProgressButton *)button
+{
+    NSLog(@"Start Button was tapped");
+    
+    [self startProgressWithButton:button];
+}
+
+- (void)progressButtonEndButtonTapped:(JNJProgressButton *)button
+{
+    NSLog(@"End Button was tapped");
+}
+
+- (void)progressButtonDidCancelProgress:(JNJProgressButton *)button
+{
+    NSLog(@"Button was canceled");
 }
 
 #pragma mark - Actions
@@ -82,12 +123,10 @@
     [sheet showInView:self.view];
 }
 
-#pragma mark - JNJProgressButtonDelegate
+#pragma mark - Sample Progress
 
-- (void)progressButtonStartButtonTapped:(JNJProgressButton *)button
+- (void)startProgressWithButton:(JNJProgressButton *)button
 {
-    NSLog(@"Start Button was tapped");
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         [NSThread sleepForTimeInterval:3];
         NSInteger index = 0;
@@ -97,18 +136,10 @@
                 button.progress = (index / 100.0f);
             });
             index++;
+
+            if (!button.progressing) return;
         }
     });
-}
-
-- (void)progressButtonEndButtonTapped:(JNJProgressButton *)button
-{
-    NSLog(@"End Button was tapped");
-}
-
-- (void)progressButtonDidCancelProgress:(JNJProgressButton *)button
-{
-    NSLog(@"Button was canceled");
 }
 
 @end
