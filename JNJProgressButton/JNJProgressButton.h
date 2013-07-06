@@ -26,6 +26,8 @@
 
 @class JNJProgressButton;
 
+typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
+
 @protocol JNJProgressButtonDelegate <NSObject>
 
 /** Invoked when the progress button is tapped for the first time, before progress has occured. 
@@ -59,6 +61,18 @@
  @discussion Only will take affect when not already progressing. Can also be used to start the button in it's end state, or to reset the state back to start state.
  */
 @property (nonatomic, assign) BOOL needsProgress;
+
+/** Invoked when the progress button is tapped for the first time, the equivalent of -[JNJProgressButtonDelegate progressButtonStartButtonTapped:].
+ */
+@property (nonatomic, copy) JNJProgressButtonBlockAction startButtonWasTapped;
+
+/** Invoked when the progress button is tapped after progress has occurred, the equivalent of -[JNJProgressButtonDelegate progressButtonEndButtonTapped:].
+ */
+@property (nonatomic, copy) JNJProgressButtonBlockAction endButtonWasTapped;
+
+/** Invoked when the progress button is tapped while progressing, the equivalent of -[JNJProgressButtonDelegate progressButtonDidCancelProgress:].
+ */
+@property (nonatomic, copy) JNJProgressButtonBlockAction progressCanceled;
 
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.
