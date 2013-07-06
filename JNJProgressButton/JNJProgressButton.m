@@ -211,8 +211,8 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
             [self.delegate progressButtonStartButtonTapped:self];
         }
         
-        if (self.startButtonWasTapped) {
-            self.startButtonWasTapped(self);
+        if (self.startButtonDidTapBlock) {
+            self.startButtonDidTapBlock(self);
         }
     } else if (self.state == JNJProgressButtonStateProgressing) {
         [self endProgressWithState:JNJProgressButtonStateUnstarted];
@@ -221,16 +221,16 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
             [self.delegate progressButtonDidCancelProgress:self];
         }
         
-        if (self.progressCanceled) {
-            self.progressCanceled(self);
+        if (self.progressDidCancelBlock) {
+            self.progressDidCancelBlock(self);
         }
     } else if (self.state == JNJProgressButtonStateFinished) {
         if ([self.delegate respondsToSelector:@selector(progressButtonEndButtonTapped:)]) {
             [self.delegate progressButtonEndButtonTapped:self];
         }
         
-        if (self.endButtonWasTapped) {
-            self.endButtonWasTapped(self);
+        if (self.endButtonDidTapBlock) {
+            self.endButtonDidTapBlock(self);
         }
     }
 }

@@ -56,14 +56,14 @@
         self.progressButton2.endButtonImage = [UIImage imageNamed:@"06-magnify"];
         
         __weak typeof(self) weak_self = self;
-        self.progressButton2.startButtonWasTapped = ^(JNJProgressButton *button) {
+        self.progressButton2.startButtonDidTapBlock = ^(JNJProgressButton *button) {
             NSLog(@"Start button was tapped. From the block.");
             [weak_self startProgressWithButton:button];
         };
-        self.progressButton2.endButtonWasTapped = ^(JNJProgressButton *button) {
+        self.progressButton2.endButtonDidTapBlock = ^(JNJProgressButton *button) {
             NSLog(@"End button was tapped. From the block.");
         };
-        self.progressButton2.progressCanceled = ^(JNJProgressButton *button) {
+        self.progressButton2.progressDidCancelBlock = ^(JNJProgressButton *button) {
             NSLog(@"Progress Cancelled. From the block.");
         };
     }

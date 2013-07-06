@@ -74,15 +74,15 @@ typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
 
 /** Invoked when the progress button is tapped for the first time, the equivalent of -[JNJProgressButtonDelegate progressButtonStartButtonTapped:].
  */
-@property (nonatomic, copy) JNJProgressButtonBlockAction startButtonWasTapped;
+@property (nonatomic, copy) JNJProgressButtonBlockAction startButtonDidTapBlock;
 
 /** Invoked when the progress button is tapped after progress has occurred, the equivalent of -[JNJProgressButtonDelegate progressButtonEndButtonTapped:].
  */
-@property (nonatomic, copy) JNJProgressButtonBlockAction endButtonWasTapped;
+@property (nonatomic, copy) JNJProgressButtonBlockAction endButtonDidTapBlock;
 
 /** Invoked when the progress button is tapped while progressing, the equivalent of -[JNJProgressButtonDelegate progressButtonDidCancelProgress:].
  */
-@property (nonatomic, copy) JNJProgressButtonBlockAction progressCanceled;
+@property (nonatomic, copy) JNJProgressButtonBlockAction progressDidCancelBlock;
 
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.
