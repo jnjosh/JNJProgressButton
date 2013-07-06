@@ -27,7 +27,7 @@
 
 @interface JNJSampleViewController () <JNJProgressButtonDelegate>
 
-@property (nonatomic, weak) IBOutlet JNJProgressButton *progressButton;
+@property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton;
 @property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton2;
 @property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton3;
 @property (weak, nonatomic) IBOutlet JNJProgressButton *progressButton4;

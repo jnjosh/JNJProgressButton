@@ -49,19 +49,28 @@ typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
 
 @interface JNJProgressButton : UIView
 
+/** The delegate of the button to act on delegate events. */
 @property (nonatomic, weak) id<JNJProgressButtonDelegate> delegate;
 
-@property (nonatomic, strong) UIColor *tintColor;
+/** The float value of the progress from 0.0 to 1.0. Values outside of this are pinned. */
 @property (nonatomic, assign) float progress;
-@property (nonatomic, assign, readonly, getter = isProgressing) BOOL progressing;
 
-@property (nonatomic, strong) UIImage *startButtonImage;
-@property (nonatomic, strong) UIImage *endButtonImage;
+/** Identifies the state of the button. Returns YES if the button is in it's preprogress mode (before progress value is changed) or while progress values are changing */
+@property (nonatomic, assign, readonly, getter = isProgressing) BOOL progressing;
 
 /** Updates the state of the button to control the button's state.
  @discussion Only will take affect when not already progressing. Can also be used to start the button in it's end state, or to reset the state back to start state.
  */
 @property (nonatomic, assign) BOOL needsProgress;
+
+/** The color to use to tint the progress indicator and track */
+@property (nonatomic, strong) UIColor *tintColor;
+
+/** The image to start displaying before progress begins or when needsProgress is YES. */
+@property (nonatomic, strong) UIImage *startButtonImage;
+
+/** The image to start displaying after progress completes or when needsProgress is NO. */
+@property (nonatomic, strong) UIImage *endButtonImage;
 
 /** Invoked when the progress button is tapped for the first time, the equivalent of -[JNJProgressButtonDelegate progressButtonStartButtonTapped:].
  */
