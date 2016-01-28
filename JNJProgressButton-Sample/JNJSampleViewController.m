@@ -127,19 +127,24 @@
 
 - (void)startProgressWithButton:(JNJProgressButton *)button
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        [NSThread sleepForTimeInterval:3];
-        NSInteger index = 0;
-        while (index <= 100) {
-            [NSThread sleepForTimeInterval:0.04];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                button.progress = (index / 100.0f);
-            });
-            index++;
-
-            if (!button.progressing) return;
-        }
-    });
+    [button endProgressWithState:JNJProgressButtonStateUnstarted];
+//
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        [button endProgressWithState:JNJProgressButtonStateFinished];
+//    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+//        [NSThread sleepForTimeInterval:3];
+//        NSInteger index = 0;
+//        while (index <= 100) {
+//            [NSThread sleepForTimeInterval:0.04];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                button.progress = (index / 100.0f);
+//            });
+//            index++;
+//
+//            if (!button.progressing) return;
+//        }
+//    });
 }
 
 @end

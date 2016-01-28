@@ -24,6 +24,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
+    JNJProgressButtonStateUnstarted,
+    JNJProgressButtonStateProgressing,
+    JNJProgressButtonStateFinished
+};
+
 @class JNJProgressButton;
 
 typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
@@ -86,6 +92,8 @@ typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
 
 /** Diametr */
 @property (assign, nonatomic) CGFloat kJNJProgressCircleDiameter;
+
+- (void)endProgressWithState:(JNJProgressButtonState)state;
 
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.

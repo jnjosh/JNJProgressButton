@@ -28,12 +28,6 @@
 static CGFloat const kJNJProgressCircleShadowRadius = 5.0f;
 static CGFloat const kJNJProgressStopWidth = 5.0f;
 
-typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
-    JNJProgressButtonStateUnstarted,
-    JNJProgressButtonStateProgressing,
-    JNJProgressButtonStateFinished
-};
-
 @interface JNJProgressButton ()
 
 @property (nonatomic, assign) JNJProgressButtonState state;
