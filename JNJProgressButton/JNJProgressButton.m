@@ -25,15 +25,8 @@
 #import "JNJProgressButton.h"
 #import <QuartzCore/QuartzCore.h>
 
-static CGFloat const kJNJProgressCircleDiameter = 20.0f;
 static CGFloat const kJNJProgressCircleShadowRadius = 5.0f;
 static CGFloat const kJNJProgressStopWidth = 5.0f;
-
-typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
-    JNJProgressButtonStateUnstarted,
-    JNJProgressButtonStateProgressing,
-    JNJProgressButtonStateFinished
-};
 
 @interface JNJProgressButton ()
 
@@ -69,6 +62,9 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 
 - (void)commonInit
 {
+    if (!self.kJNJProgressCircleDiameter) {
+        self.kJNJProgressCircleDiameter = 20.0f;
+    }
     self.needsProgress = YES;
     self.state = JNJProgressButtonStateUnstarted;
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];
@@ -327,10 +323,10 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 - (CGRect)rectForProgressCircle
 {
     return (CGRect) {
-        CGRectGetMidX(self.bounds) - kJNJProgressCircleDiameter / 2.0f,
-        CGRectGetMidY(self.bounds) - kJNJProgressCircleDiameter / 2.0f,
-        kJNJProgressCircleDiameter,
-        kJNJProgressCircleDiameter
+        CGRectGetMidX(self.bounds) - self.kJNJProgressCircleDiameter / 2.0f,
+        CGRectGetMidY(self.bounds) - self.kJNJProgressCircleDiameter / 2.0f,
+        self.kJNJProgressCircleDiameter,
+        self.kJNJProgressCircleDiameter
     };
 }
 
