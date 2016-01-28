@@ -84,6 +84,9 @@ typedef void(^JNJProgressButtonBlockAction)(JNJProgressButton *button);
  */
 @property (nonatomic, copy) JNJProgressButtonBlockAction progressDidCancelBlock;
 
+/** Diametr */
+@property (assign, nonatomic) CGFloat kJNJProgressCircleDiameter;
+
 /** Set the current progress of the button
  @param progress The float value of the progress from 0.0 to 1.0. Values outside of this are pinned.
  @param animated Boolean flag to specify if this change should be animated
