@@ -68,6 +68,9 @@ typedef NS_ENUM(NSUInteger, JNJProgressButtonState) {
 
 - (void)commonInit
 {
+    if (!self.kJNJProgressCircleDiameter) {
+        self.kJNJProgressCircleDiameter = 20.0f;
+    }
     self.needsProgress = YES;
     self.state = JNJProgressButtonStateUnstarted;
     [self addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(progressButtonWasTapped:)]];

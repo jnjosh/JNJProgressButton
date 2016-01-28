@@ -192,6 +192,11 @@
 				CLASSPREFIX = JNJ;
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = JNJ;
+				TargetAttributes = {
+					A464A211177E9DB600BCE741 = {
+						DevelopmentTeam = WQWKS8U593;
+					};
+				};
 			};
 			buildConfigurationList = A464A20D177E9DB600BCE741 /* Build configuration list for PBXProject "JNJProgressButton-Sample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -315,6 +320,7 @@
 		A464A230177E9DB600BCE741 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "JNJProgressButton-Sample/JNJProgressButton-Sample-Prefix.pch";
 				INFOPLIST_FILE = "JNJProgressButton-Sample/JNJProgressButton-Sample-Info.plist";
@@ -326,6 +332,7 @@
 		A464A231177E9DB600BCE741 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "JNJProgressButton-Sample/JNJProgressButton-Sample-Prefix.pch";
 				INFOPLIST_FILE = "JNJProgressButton-Sample/JNJProgressButton-Sample-Info.plist";
